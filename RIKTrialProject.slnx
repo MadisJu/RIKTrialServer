@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RIKTrialServer/RIKTrialServer.csproj" />
+  <Project Path="RIKTrialWebsite/RIKTrialWebsite.csproj" Id="5a84c615-a364-496c-84f2-7480c9d4c098" />
+</Solution>
