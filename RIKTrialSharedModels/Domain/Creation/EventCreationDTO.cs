@@ -1,4 +1,4 @@
-﻿namespace RIKTrialServer.Domains.DTOs.Creation
+﻿namespace RIKTrialSharedModels.Domain.Creation
 {
     public class EventCreationDTO
     {

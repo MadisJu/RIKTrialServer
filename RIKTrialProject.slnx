@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="RIKTrialServer/RIKTrialServer.csproj" />
-  <Project Path="RIKTrialWebsite/RIKTrialWebsite.csproj" Id="5a84c615-a364-496c-84f2-7480c9d4c098" />
+  <Project Path="RIKTrialSharedModels/RIKTrialSharedModels.csproj" Id="1c4f0a1c-f897-49c3-8bba-75ea75af0925" />
+  <Project Path="RIKTrialWebInterface/RIKTrialWebInterface.csproj" Id="f1d26fd7-5c6d-4265-89dd-00a7abe427a4" />
 </Solution>

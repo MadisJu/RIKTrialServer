@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RIKTrialServer.Domains.Models;
-using RIKTrialServer.Domains.Filters;
+using RIKTrialSharedModels.Domains.Filters;
 using RIKTrialServer.Infra.Persistance;
 using RIKTrialServer.Repositories.Interfaces;
 

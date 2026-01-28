@@ -1,4 +1,4 @@
-﻿namespace RIKTrialServer.Domains.DTOs.Returns
+﻿namespace RIKTrialSharedModels.Domain.Returns
 {
     public class EventDetailedReturnDTO
     {

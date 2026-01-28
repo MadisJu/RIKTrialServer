@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RIKTrialServer.Domains.DTOs.Creation;
-using RIKTrialServer.Domains.DTOs.Returns;
-using RIKTrialServer.Domains.Filters;
+using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Returns;
+using RIKTrialSharedModels.Domains.Filters;
 using RIKTrialServer.Services.Interfaces;
 
 namespace RIKTrialServer.Controllers
@@ -12,9 +12,9 @@ namespace RIKTrialServer.Controllers
     {
         private readonly IEventService _eventService = eventService;
 
-        [HttpPost]
+        [HttpGet]
         [Route("events")]
-        public async Task<ActionResult<List<EventReturnDTO>>> GetEvents([FromBody] EventFilters filters)
+        public async Task<ActionResult<List<EventReturnDTO>>> GetEvents([FromQuery] EventFilters filters)
         {
             return Ok(await _eventService.GetEvents(filters));
         }

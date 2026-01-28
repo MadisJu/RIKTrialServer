@@ -1,5 +1,5 @@
 ﻿using RIKTrialServer.Domains.Models;
-using RIKTrialServer.Domains.Filters;
+using RIKTrialSharedModels.Domains.Filters;
 
 namespace RIKTrialServer.Repositories.Interfaces
 {

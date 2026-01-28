@@ -1,0 +1,48 @@
+﻿@page "/"
+@inject EventAPIService EventApi
+
+<PageTitle>Home</PageTitle>
+
+<h1>RIK EVENTS</h1>
+
+
+
+@if (_events == null)
+{
+    <p>Loading</p>
+}
+else if (_events.Count == 0)
+{
+    <p>No events</p>
+}
+else
+{
+    <ul>
+        @foreach (EventReturnDTO ev in _events)
+        {
+            <li>
+                <strong>@ev.Name</strong>
+                <br />
+                Date: @ev.Date.ToShortDateString()
+            </li>
+        }
+    </ul>
+}
+
+@code
+{
+    private List<EventReturnDTO>? _events;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventFilters filters = new EventFilters
+        {
+            Page = 1,
+            PageSize = 10,
+            StartDate = null,
+            EndDate = null
+        };
+
+        _events = await EventApi.GetEventsAsync(filters);
+    }
+}

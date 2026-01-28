@@ -1,7 +1,7 @@
 ﻿using RIKTrialServer.Domains.Models;
-using RIKTrialServer.Domains.DTOs.Creation;
-using RIKTrialServer.Domains.DTOs.Returns;
-using RIKTrialServer.Domains.Filters;
+using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Returns;
+using RIKTrialSharedModels.Domains.Filters;
 using RIKTrialServer.Repositories.Interfaces;
 using RIKTrialServer.Services.Interfaces;
 using RIKTrialServer.Transformers;

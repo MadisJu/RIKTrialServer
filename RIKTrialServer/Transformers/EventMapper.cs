@@ -1,5 +1,5 @@
 ﻿using RIKTrialServer.Domains.Models;
-using RIKTrialServer.Domains.DTOs.Returns;
+using RIKTrialSharedModels.Domain.Returns;
 
 namespace RIKTrialServer.Transformers
 {

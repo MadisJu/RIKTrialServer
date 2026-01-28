@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /RIKTrialServer/appsettings.json
 /RIKTrialServer/appsettings.Development.json
+/RIKTrialServer/riktrial.db
+/RIKTrialServer/riktrial.db-shm
+/RIKTrialServer/riktrial.db-wal

@@ -1,0 +1,30 @@
+﻿@page "/startup"
+
+@inject BackendHealthService BackendStatus
+@inject NavigationManager Nav
+
+<h3>Starting backend...</h3>
+
+<p>Please wait while the server becomes available.</p>
+
+@if (_attempts > 0)
+{
+    <p>Retry attempt: @_attempts</p>
+}
+
+@code
+{
+    private int _attempts = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        while (!await BackendStatus.IsBackendReadyAsync())
+        {
+            _attempts++;
+
+            await Task.Delay(500);
+        }
+
+        Nav.NavigateTo("/");
+    }
+}
