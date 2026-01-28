@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,11 +17,11 @@ namespace RIKTrialServer.Migrations
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Location = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Location = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    AdditionalInfo = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,9 +32,9 @@ namespace RIKTrialServer.Migrations
                 name: "PaymentMethods",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Method = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Method = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,8 +45,8 @@ namespace RIKTrialServer.Migrations
                 name: "Participants",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PaymentMethodId = table.Column<int>(type: "integer", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PaymentMethodId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,11 +63,11 @@ namespace RIKTrialServer.Migrations
                 name: "Companies",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CompanyCode = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    ParticipantAmount = table.Column<int>(type: "integer", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "character varying(5000)", maxLength: 5000, nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    CompanyCode = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    ParticipantAmount = table.Column<int>(type: "INTEGER", nullable: false),
+                    AdditionalInfo = table.Column<string>(type: "TEXT", maxLength: 5000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,8 +84,8 @@ namespace RIKTrialServer.Migrations
                 name: "EventParticipants",
                 columns: table => new
                 {
-                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParticipantId = table.Column<Guid>(type: "uuid", nullable: false)
+                    EventId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ParticipantId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,11 +108,11 @@ namespace RIKTrialServer.Migrations
                 name: "Persons",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    IdNumber = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "character varying(1500)", maxLength: 1500, nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    IdNumber = table.Column<string>(type: "TEXT", maxLength: 11, nullable: false),
+                    AdditionalInfo = table.Column<string>(type: "TEXT", maxLength: 1500, nullable: true)
                 },
                 constraints: table =>
                 {
