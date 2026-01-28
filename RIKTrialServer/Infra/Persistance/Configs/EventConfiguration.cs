@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RIKTrialServer.Domain.Models;
+using RIKTrialServer.Domains.Models;
 
 namespace RIKTrialServer.Infra.Persistance.Configs
 {
@@ -24,7 +24,7 @@ namespace RIKTrialServer.Infra.Persistance.Configs
                 .IsRequired();
 
             builder.Property(e => e.AdditionalInfo)
-                .HasMaxLength(500);
+                .HasMaxLength(1000);
 
             builder.Navigation(e => e.Participants)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);

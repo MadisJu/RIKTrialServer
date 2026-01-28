@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using RIKTrialServer.Domain.Models;
+using RIKTrialServer.Domains.Models;
 using System;
 
 namespace RIKTrialServer.Infra.Persistance

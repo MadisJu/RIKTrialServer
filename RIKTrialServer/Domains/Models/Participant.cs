@@ -1,9 +1,11 @@
-﻿namespace RIKTrialServer.Domain.Models
+﻿namespace RIKTrialServer.Domains.Models
 {
-    public class Participant
+    public abstract class Participant
     {
         public Guid Id { get; set; }
         public int? PaymentMethodId { get; set; }
+
+        public abstract int ParticipantCount { get; }
 
         // -- ef navigation --
 

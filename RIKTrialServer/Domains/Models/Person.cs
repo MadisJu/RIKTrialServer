@@ -1,4 +1,4 @@
-﻿namespace RIKTrialServer.Domain.Models
+﻿namespace RIKTrialServer.Domains.Models
 {
     public class Person : Participant
     {
@@ -6,6 +6,8 @@
         public string LastName { get; set; } = null!;
         public string IdNumber { get; set; } = null!;
         public string? AdditionalInfo { get; set; } = null!;
+
+        public override int ParticipantCount => 1;
 
         // -- const --
         private Person() { }

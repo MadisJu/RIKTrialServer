@@ -1,4 +1,4 @@
-﻿namespace RIKTrialServer.Domain.Models
+﻿namespace RIKTrialServer.Domains.Models
 {
     public class Company : Participant
     {
@@ -6,6 +6,8 @@
         public string CompanyCode { get; set; } = null!;
         public int ParticipantAmount { get; set; }
         public string? AdditionalInfo { get; set; } = null!;
+
+        public override int ParticipantCount => ParticipantAmount;
 
         // -- const --
 

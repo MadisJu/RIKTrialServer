@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RIKTrialServer.Domain.Models;
+using RIKTrialServer.Domains.Models;
 
 namespace RIKTrialServer.Infra.Persistance.Configs
 {

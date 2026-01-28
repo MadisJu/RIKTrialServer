@@ -1,4 +1,4 @@
-﻿namespace RIKTrialServer.Domain.Models
+﻿namespace RIKTrialServer.Domains.Models
 {
     public class PaymentMethod
     {
