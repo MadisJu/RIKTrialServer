@@ -4,16 +4,12 @@
     {
         public Guid Id { get; set; }
         public int? PaymentMethodId { get; set; }
-        public Guid EventParticipantId { get; set; }
-        public ParticipantType ParticipantType { get; set; }
 
         // -- ef navigation --
 
         private readonly List<EventParticipant> _events = new();
         public IReadOnlyCollection<EventParticipant> Events => _events;
         public PaymentMethod PaymentMethod { get; set; } = null!;
-        public Person? Person { get; set; }
-        public Company? Company { get; set; }
 
         // -- const --
 
@@ -25,11 +21,5 @@
             PaymentMethodId = paymentMethodId;
         }
 
-    }
-
-    public enum ParticipantType
-    {
-        Person = 0,
-        Company = 1
     }
 }

@@ -22,6 +22,13 @@ namespace RIKTrialServer.Infra.Persistance.Configs
 
             builder.UseTptMappingStrategy();
 
+            /*
+            builder.HasDiscriminator<ParticipantType>("ParticipantType")
+                .HasValue<Person>(ParticipantType.Person)
+                .HasValue<Company>(ParticipantType.Company);
+            I am stupid i dont need this
+            */
+
             builder.Navigation(p => p.Events)
                .UsePropertyAccessMode(PropertyAccessMode.Field);
 

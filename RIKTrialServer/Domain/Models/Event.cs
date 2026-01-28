@@ -13,7 +13,7 @@
         private readonly List<EventParticipant> _participants = new();
         public IReadOnlyCollection<EventParticipant> Participants => _participants;
 
-        // -- funcs --
+        // -- uncs --
         public void RegisterParticipant(Guid participantId)
         {
             _participants.Add(new EventParticipant(Id, participantId));

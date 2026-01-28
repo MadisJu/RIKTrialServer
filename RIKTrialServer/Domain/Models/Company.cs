@@ -2,7 +2,6 @@
 {
     public class Company : Participant
     {
-        public Guid ParticipantId { get; set; }
         public string Name { get; set; } = null!;
         public string CompanyCode { get; set; } = null!;
         public int ParticipantAmount { get; set; }

@@ -13,12 +13,12 @@ namespace RIKTrialServer.Infra.Persistance.Configs
 
             builder.HasKey(x => new { x.EventId, x.ParticipantId });
 
-            builder.HasOne<Event>()
+            builder.HasOne(ep => ep.Event)
                 .WithMany(e => e.Participants)
                 .HasForeignKey(x => x.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne<Participant>()
+            builder.HasOne(ep => ep.Participant)
                 .WithMany(p => p.Events)
                 .HasForeignKey(x => x.ParticipantId)
                 .OnDelete(DeleteBehavior.Cascade);
