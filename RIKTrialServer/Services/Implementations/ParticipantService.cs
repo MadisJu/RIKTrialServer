@@ -1,7 +1,9 @@
 ﻿using RIKTrialServer.Domains.Models;
 using RIKTrialServer.Repositories.Interfaces;
 using RIKTrialServer.Services.Interfaces;
+using RIKTrialServer.Transformers;
 using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Returns;
 using RIKTrialSharedModels.Domain.Types;
 
 namespace RIKTrialServer.Services.Implementations
@@ -68,14 +70,24 @@ namespace RIKTrialServer.Services.Implementations
             return await _participantRepo.RemoveAsync(p, ctoken);
         }
 
-        public async Task<Participant?> GetParticipant(Guid id, CancellationToken ctoken)
+        public async Task<List<ParticipantLightReturnDTO>> GetEventParticipants(Guid eventId, CancellationToken ctoken)
         {
-            return await _participantRepo.GetParticipant(id, ctoken);
+            List<Participant> participants = await _participantRepo.GetEventParticipants(eventId, ctoken);
+
+            return participants.Select(p => ParticipantMapper.MapToParticipantLightReturnDTO(p)).ToList();
         }
 
-        public async Task<List<Participant>> GetParticipants(CancellationToken ctoken)
+        public async Task<ParticipantReturnDTO> GetParticipant(Guid id, CancellationToken ctoken)
         {
-            return await _participantRepo.GetParticipants(ctoken);
+            Participant? p = await _participantRepo.GetParticipant(id, ctoken) ?? throw new Exception("Ei ole sellist osalejat");
+
+            return ParticipantMapper.MapToParticipantReturnDTO(p);
+        }
+
+        public async Task<List<ParticipantReturnDTO>> GetParticipants(CancellationToken ctoken)
+        {
+            List<Participant> participants = await _participantRepo.GetParticipants(ctoken);
+            return participants.Select(p => ParticipantMapper.MapToParticipantReturnDTO(p)).ToList();
         }
 
         public async Task<bool> UpdateParticipant(ParticipantCreationDTO data, Guid id, CancellationToken ctoken)

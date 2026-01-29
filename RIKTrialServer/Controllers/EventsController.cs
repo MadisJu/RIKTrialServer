@@ -31,6 +31,20 @@ namespace RIKTrialServer.Controllers
             return Ok(await _eventService.AddEvent(data, ctoken));
         }
 
+        [HttpDelete]
+        [Route("event")]
+        public async Task<ActionResult<bool>> DeleteEvent([FromQuery] Guid id, CancellationToken ctoken)
+        {
+            try
+            {
+                return Ok(await _eventService.DeleteEvent(id, ctoken));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("register")]
         public async Task<ActionResult<bool>> RegisterParticipant([FromQuery] RegistrationDTO data, CancellationToken ctoken)

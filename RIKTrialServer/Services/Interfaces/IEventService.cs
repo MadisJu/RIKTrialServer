@@ -10,7 +10,7 @@ namespace RIKTrialServer.Services.Interfaces
         public Task<List<EventReturnDTO>> GetEvents(EventFilters filters);
         public Task<Event?> GetEvent(Guid eventId);
         public Task<bool> AddEvent(EventCreationDTO data, CancellationToken ctoken);
-        public Task DeleteEvent(Guid eventId, CancellationToken ctoken);
+        public Task<bool> DeleteEvent(Guid eventId, CancellationToken ctoken);
         public Task<bool> RegisterParticipant(Guid eventId, Guid participantId, CancellationToken ctoken);
         public Task<bool> UnRegisterParticipant(Guid eventId, Guid participantId, CancellationToken ctoken);
     

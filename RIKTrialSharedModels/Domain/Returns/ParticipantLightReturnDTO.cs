@@ -6,8 +6,6 @@ namespace RIKTrialSharedModels.Domain.Returns
     {
         public ParticipantType Type { get; set; }
         public Guid Id { get; set; }
-        public PaymentMethodReturnDTO PaymentMethod { get; set; } = null!;
-        public string? AdditionalInfo { get; set; }
 
         // For person type participant
         public string? FirstName { get; set; }

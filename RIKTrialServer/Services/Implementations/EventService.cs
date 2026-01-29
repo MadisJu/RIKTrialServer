@@ -27,16 +27,14 @@ namespace RIKTrialServer.Services.Implementations
             return await _eventRepo.AddEvent(ev, ctoken);
         }
 
-        public async Task DeleteEvent(Guid eventId, CancellationToken ctoken)
+        public async Task<bool> DeleteEvent(Guid eventId, CancellationToken ctoken)
         {
             Event? ev = await _eventRepo.GetEventByID(eventId)
                 ?? throw new Exception("Proovite kustutada mitte eksisteerivat üritust");
 
             if (ev.Date < DateTime.Now) throw new Exception("Ei saa kustutada minevikust");
 
-            bool suc = await _eventRepo.RemoveEvent(ev, ctoken);
-
-            if (!suc) throw new Exception("Kustutamine ei õnnestunud");
+            return await _eventRepo.RemoveEvent(ev, ctoken);
         }
 
         public async Task<Event?> GetEvent(Guid eventId)
