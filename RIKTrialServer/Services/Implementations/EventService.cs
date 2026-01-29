@@ -49,7 +49,7 @@ namespace RIKTrialServer.Services.Implementations
         {
             List<Event> events = await _eventRepo.GetEvents(filters);
 
-            return events.Select(ev => EventMapper.EventsResponseMapper(ev, ParticipantCount(ev))).ToList();
+            return events.Select(ev => EventMapper.MapToEventsResponse(ev, ParticipantCount(ev))).ToList();
         }
 
         public async Task RegisterParticipant(Guid e, Guid participant, CancellationToken ctoken)

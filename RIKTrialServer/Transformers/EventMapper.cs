@@ -5,7 +5,7 @@ namespace RIKTrialServer.Transformers
 {
     public static class EventMapper
     {
-        public static EventReturnDTO EventsResponseMapper (Event ev, int participantCount)
+        public static EventReturnDTO MapToEventsResponse (Event ev, int participantCount)
         {
             return new EventReturnDTO
             {

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Method { get; set; } = null!;
+        public bool Disabled { get; set; }
 
         // -- ef navigations --
 
