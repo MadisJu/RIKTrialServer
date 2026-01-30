@@ -2,47 +2,105 @@
 @inject EventAPIService EventApi
 
 <PageTitle>Home</PageTitle>
+@* Content grid *@
+<div class="Content-Grid">
+    @*Top Banner*@
+    <div class="Grid-Row">
+        <div class="Row-Container Text-Header">
+            <h1>Pikk pikk jutustav tekst</h1>
+        </div>
+        <div class="Row-Container">
+            <img src="images/pilt.jpg"/>
+        </div>
+    </div>
+    @*Upcoming events*@
+    <div class="Grid-Box">
+        <div class="Title-Box Text-Header Text-Header--Center">
+            <h2>Tulevased Üritused</h2>
+        </div>
+        <div class="Content-Box Content-Card">
+            @if (_upcomingEvents == null)
+            {
+                <p>Loading</p>
+            }
+            else if (_upcomingEvents.Count == 0)
+            {
+                <p>No events</p>
+            }
+            else
+            {
+                <ul>
+                    @foreach (EventReturnDTO ev in _upcomingEvents)
+                    {
+                        <li>
+                            <strong>@ev.Name</strong>
+                            <br />
+                            Date: @ev.Date.ToShortDateString()
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    @*Past events*@
+    <div class="Grid-Box">
+        <div class="Title-Box Text-Header Text-Header--Center">
+            <h2>Toimunud Üritused</h2>
+        </div>
+        <div class="Content-Box Content-Card">
+            @if (_pastEvents == null)
+            {
+                <p>Loading</p>
+            }
+            else if (_pastEvents.Count == 0)
+            {
+                <p>No events</p>
+            }
+            else
+            {
+                <ul>
+                    @foreach (EventReturnDTO ev in _pastEvents)
+                    {
+                        <li>
+                            <strong>@ev.Name</strong>
+                            <br />
+                            Date: @ev.Date.ToShortDateString()
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>
 
-<h1>RIK EVENTS</h1>
 
 
 
-@if (_events == null)
-{
-    <p>Loading</p>
-}
-else if (_events.Count == 0)
-{
-    <p>No events</p>
-}
-else
-{
-    <ul>
-        @foreach (EventReturnDTO ev in _events)
-        {
-            <li>
-                <strong>@ev.Name</strong>
-                <br />
-                Date: @ev.Date.ToShortDateString()
-            </li>
-        }
-    </ul>
-}
 
 @code
 {
-    private List<EventReturnDTO>? _events;
+    private List<EventReturnDTO>? _upcomingEvents;
+    private List<EventReturnDTO>? _pastEvents;
 
     protected override async Task OnInitializedAsync()
     {
-        EventFilters filters = new EventFilters
+        EventFilters pastFilters = new EventFilters
         {
             Page = 1,
             PageSize = 10,
             StartDate = null,
+            EndDate = DateTime.UtcNow
+        };
+
+        EventFilters upcomingFilters = new EventFilters
+        {
+            Page = 1,
+            PageSize = 10,
+            StartDate = DateTime.UtcNow,
             EndDate = null
         };
 
-        _events = await EventApi.GetEventsAsync(filters);
+        _pastEvents = await EventApi.GetEventsAsync(pastFilters);
+        _upcomingEvents = await EventApi.GetEventsAsync(upcomingFilters);
     }
 }

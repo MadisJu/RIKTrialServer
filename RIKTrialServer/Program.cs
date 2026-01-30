@@ -51,6 +51,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("BlazorPolicy");
 
-app.MapGet("/", () => "Hello World!");
+/*app.MapGet("/", () => "Hello World!");*/
 
 app.Run();
