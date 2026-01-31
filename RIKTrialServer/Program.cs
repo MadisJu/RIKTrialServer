@@ -18,6 +18,12 @@ builder.Services.AddDbContext<ServerDbContext>(options =>
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEventService, EventService>();
 
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
+builder.Services.AddScoped<IParticipantService, ParticipantService>();
+
+builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

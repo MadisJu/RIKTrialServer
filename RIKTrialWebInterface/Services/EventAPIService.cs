@@ -1,5 +1,8 @@
-﻿using RIKTrialSharedModels.Domain.Returns;
+﻿using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Returns;
 using RIKTrialSharedModels.Domains.Filters;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RIKTrialWebInterface.Services
 {
@@ -12,7 +15,7 @@ namespace RIKTrialWebInterface.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<EventReturnDTO>> GetEventsAsync(
+        public async Task<List<EventReturnDTO>> GetEvents(
             EventFilters filters,
             CancellationToken cancellationToken = default
         )
@@ -31,5 +34,58 @@ namespace RIKTrialWebInterface.Services
                        cancellationToken)
                    ?? new List<EventReturnDTO>();
         }
+
+        public async Task<EventDetailedReturnDTO?> GetEvent(
+            Guid id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            string url =
+                $"api/Events/event?id={id}";
+
+            return await _httpClient.GetFromJsonAsync<EventDetailedReturnDTO>(
+                       url,
+                       cancellationToken)
+                   ?? null;
+        }
+
+        public async Task<bool> CreateEvent(EventCreationDTO data, CancellationToken ctoken = default)
+        {
+            string url = "api/Events/event";
+
+            HttpResponseMessage response =
+                await _httpClient.PostAsJsonAsync(
+                    url,
+                    data,
+                    ctoken);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteEvent(Guid id, CancellationToken ctoken = default)
+        {
+            string url = $"api/Events/event/{id}";
+
+            HttpResponseMessage response =
+                await _httpClient.DeleteAsync(url, ctoken);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> AddParticipant
+        (
+            RegistrationDTO reg,
+            CancellationToken ctoken = default
+        )
+        {
+            HttpResponseMessage response =
+                await _httpClient.PostAsync(
+                    $"api/Events/register?ParticipantId={reg.ParticipantId}&EventId={reg.EventId}", 
+                    content: null,
+                    ctoken);
+
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

@@ -54,3 +54,90 @@
     overflow-y: auto;
 }
 
+.Event-List {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+::deep a.Event-Card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    margin-left:2px;
+    margin-right:2px;
+    margin-top:2px;
+}
+
+    ::deep a.Event-Card:hover {
+        background: #f2f6ff;
+        border-color: royalblue;
+        box-shadow: -5px 5px 12px rgba(0, 0, 0, 0.20);
+        transform: translateY(-1px);
+    }
+
+
+.Event-CardTitle {
+    font-weight: bold;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.Event-CardInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.Event-CardFooter {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: royalblue;
+}
+
+.Event-CardMain {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.Event-CardTitle {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.Event-CardMeta {
+    font-size: 0.78rem;
+    opacity: 0.75;
+    white-space: nowrap;
+}
+
+.Event-CardAction {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    .Event-CardAction:hover {
+        background: rgba(65, 105, 225, 0.15);
+    }
+
+    .Event-CardAction img {
+        width: 16px;
+        height: 16px;
+    }

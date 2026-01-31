@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject EventAPIService EventApi
+@inject NavigationManager Nav
+
 
 <PageTitle>Home</PageTitle>
 @* Content grid *@
@@ -29,16 +31,48 @@
             }
             else
             {
-                <ul>
+                <div class="Event-List">
                     @foreach (EventReturnDTO ev in _upcomingEvents)
                     {
-                        <li>
-                            <strong>@ev.Name</strong>
-                            <br />
-                            Date: @ev.Date.ToShortDateString()
-                        </li>
+                        <NavLink class="Event-Card nav-link"
+                                 href="@($"/events/{ev.Id}")">
+
+                            <div class="Event-CardMain">
+
+                                <div class="Event-CardTitle">
+                                    @ev.Name
+                                </div>
+
+                                <div class="Event-CardMeta">
+                                    @ev.Location •
+                                    @ev.Date.ToString("dd.MM.yyyy") •
+                                    Osalejaid: @ev.ParticipantCount
+                                </div>
+
+                            </div>
+                            <button class="Event-CardAction"
+                                    type="button"
+                                    title="Lisa osaleja"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true"
+                                    @onclick="(() => NavigateToAddParticipant(ev.Id))">
+
+                                <img src="images/plus-sign.svg" alt="Add Participant" />
+                            </button>
+
+                            <button class="Event-CardAction"
+                                    type="button"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true"
+                                    @onclick="(() => RemoveEvent(ev.Id))">
+
+                                <img src="images/remove.svg" alt="Action" />
+                            </button>
+
+                        </NavLink>
+
                     }
-                </ul>
+                </div>
             }
         </div>
     </div>
@@ -58,16 +92,28 @@
             }
             else
             {
-                <ul>
+                <div class="Event-List">
                     @foreach (EventReturnDTO ev in _pastEvents)
                     {
-                        <li>
-                            <strong>@ev.Name</strong>
-                            <br />
-                            Date: @ev.Date.ToShortDateString()
-                        </li>
+                        <NavLink class="Event-Card nav-link"
+                                 href="@($"/events/{ev.Id}")">
+
+                            <div class="Event-CardMain">
+
+                                <div class="Event-CardTitle">
+                                    @ev.Name
+                                </div>
+
+                                <div class="Event-CardMeta">
+                                    @ev.Location •
+                                    @ev.Date.ToString("dd.MM.yyyy") •
+                                    Osalejaid: @ev.ParticipantCount
+                                </div>
+
+                            </div>
+                        </NavLink>
                     }
-                </ul>
+                </div>
             }
         </div>
     </div>
@@ -81,6 +127,17 @@
 {
     private List<EventReturnDTO>? _upcomingEvents;
     private List<EventReturnDTO>? _pastEvents;
+
+    private void RemoveEvent(Guid eventId)
+    {
+        
+    }
+
+    private void NavigateToAddParticipant(Guid eventId)
+    {
+        Nav.NavigateTo($"/events/{eventId}/participants/add");
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,7 +157,7 @@
             EndDate = null
         };
 
-        _pastEvents = await EventApi.GetEventsAsync(pastFilters);
-        _upcomingEvents = await EventApi.GetEventsAsync(upcomingFilters);
+        _pastEvents = await EventApi.GetEvents(pastFilters);
+        _upcomingEvents = await EventApi.GetEvents(upcomingFilters);
     }
 }

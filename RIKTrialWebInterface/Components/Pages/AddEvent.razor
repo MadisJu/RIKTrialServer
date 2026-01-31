@@ -1,5 +1,162 @@
-﻿<h3>AddEvent</h3>
+﻿@page "/events/add"
+@using RIKTrialSharedModels.Domain.Creation
 
-@code {
+
+@inject EventAPIService EventApi
+@inject NavigationManager Nav
+
+<PageTitle>Lisa Üritus</PageTitle>
+
+<div class="Banner">
+
+    <div class="Text-Header Text-Header--Center Banner-Text">
+        <h1>Lisa uus üritus süsteemi</h1>
+    </div>
+
+    <div class="Banner-Image">
+        <img src="images/libled.jpg" alt="Banner" />
+    </div>
+</div>
+
+<div class="Form-Body">
+
+    <div class="Form-Card">
+
+        <h2>Ürituse Andmed</h2>
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <p class="error">@_errorMessage</p>
+        }
+
+        @if (_success)
+        {
+            <p class="success">Üritus lisatud edukalt!</p>
+        }
+
+        <EditForm Model="@_model" OnValidSubmit="SubmitEvent" FormName="AddEventForm">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="Form-Row">
+                <label>Nimi</label>
+                <InputText class="form-input" @bind-Value="_model.Name" />
+                <ValidationMessage For="@(() => _model.Name)" />
+            </div>
+
+            <div class="Form-Row">
+                <label>Kuupäev ja Kellaaeg</label>
+                <InputDate class="form-input" @bind-Value="_model.Date" />
+                <ValidationMessage For="@(() => _model.Date)" />
+            </div>
+
+            <!-- Time -->
+            <div class="Form-Row">
+                <label>Kellaaeg</label>
+
+                <div class="time-selectors">
+
+                    <InputSelect class="form-input"
+                                 @bind-Value="_hour">
+                        @for (int h = 0; h < 24; h++)
+                        {
+                            <option value="@h">@h.ToString("D2")</option>
+                        }
+                    </InputSelect>
+
+                    <span class="time-separator">:</span>
+
+                    <InputSelect class="form-input"
+                                 @bind-Value="_minute">
+                        @foreach (int m in _minuteOptions)
+                        {
+                            <option value="@m">@m.ToString("D2")</option>
+                        }
+                    </InputSelect>
+
+                </div>
+            </div>
+
+            <div class="Form-Row">
+                <label>Asukoht</label>
+                <InputText class="form-input" @bind-Value="_model.Location" />
+                <ValidationMessage For="@(() => _model.Location)" />
+            </div>
+
+            <div class="Form-Row">
+                <label>Lisainfo</label>
+                <InputTextArea class="form-input form-textarea"
+                               @bind-Value="_model.AdditionalInfo" />
+                <ValidationMessage For="@(() => _model.AdditionalInfo)" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn--secondary"
+                        @onclick="NavigateBack">
+                    Tagasi
+                </button>
+
+                <button type="submit" class="btn btn--primary">
+                    Lisa
+                </button>
+            </div>
+        </EditForm>
+
+    </div>
+</div>
+
+@code
+{
+    private EventCreationDTO _model = new();
+
+    private int _hour;
+    private int _minute;
+
+    private bool _success;
+    private string? _errorMessage;
+
+    private readonly List<int> _minuteOptions =
+    [
+        0, 15, 30, 45
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model.Date = DateTime.Now;
+    }
+
+    private async Task SubmitEvent()
+    {
+        _model.Date = new DateTime
+            (
+                _model.Date.Year,
+                _model.Date.Month,
+                _model.Date.Day,
+                _hour,
+                _minute,
+                0
+            );
+
+
+        bool ok = await EventApi.CreateEvent(_model);
+
+        if (!ok)
+        {
+            _errorMessage = "Ürituse lisamine nurjus.";
+            return;
+        }
+
+        _success = true;
+
+        await Task.Delay(800);
+        Nav.NavigateTo("/");
+    }
+
+    private void NavigateBack()
+    {
+        Nav.NavigateTo("/");
+    }
 
 }

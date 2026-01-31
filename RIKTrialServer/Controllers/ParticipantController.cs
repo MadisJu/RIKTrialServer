@@ -27,7 +27,7 @@ namespace RIKTrialServer.Controllers
 
         [HttpPost]
         [Route("participant")]
-        public async Task<ActionResult<bool>> CreateParticipant([FromBody] ParticipantCreationDTO data, CancellationToken ctoken)
+        public async Task<ActionResult<Guid>> CreateParticipant([FromBody] ParticipantCreationDTO data, CancellationToken ctoken)
         {
             try
             {

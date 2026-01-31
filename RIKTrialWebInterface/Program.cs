@@ -15,6 +15,8 @@ builder.Services.AddScoped(sp =>
 
 builder.Services.AddScoped<EventAPIService>();
 builder.Services.AddScoped<BackendHealthService>();
+builder.Services.AddScoped<ParticipantAPIService>();
+builder.Services.AddScoped<PaymentMethodAPIService>();
 
 var app = builder.Build();
 

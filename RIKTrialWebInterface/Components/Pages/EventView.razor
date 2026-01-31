@@ -1,5 +1,115 @@
-﻿<h3>EventView</h3>
+﻿@page "/events/{EventId:guid}"
 
-@code {
+@using RIKTrialSharedModels.Domain.Returns
+@using RIKTrialSharedModels.Domain.Types
 
+@inject EventAPIService EventApi
+@inject NavigationManager Nav
+
+<PageTitle>Ürituse Vaade</PageTitle>
+
+@if (_event == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <!-- Banner -->
+    <div class="Banner">
+
+        <div class="Banner-Text Text-Header Text-Header--Center">
+            <h1>@_event.Name</h1>
+        </div>
+
+        <div class="Banner-Image">
+            <img src="images/libled.jpg" alt="Banner" />
+        </div>
+
+    </div>
+
+    <!-- Body -->
+    <div class="Form-Body">
+
+        <div class="Form-Card">
+
+            <h2>Ürituse Andmed</h2>
+
+            <!-- Event Info -->
+            <div class="Form-Row">
+                <label>Kuupäev</label>
+                <span>@_event.Date.ToString("dd.MM.yyyy HH:mm")</span>
+            </div>
+
+            <div class="Form-Row">
+                <label>Asukoht</label>
+                <span>@_event.Location</span>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_event.AdditionalInfo))
+            {
+                <div class="Form-Row">
+                    <label>Lisainfo</label>
+                    <span>@_event.AdditionalInfo</span>
+                </div>
+            }
+
+            <!-- Participants -->
+            <h2 class="Section-Title">Osalejad</h2>
+
+            @if (_event.Participants.Count == 0)
+            {
+                <p>Osalejaid pole veel lisatud.</p>
+            }
+            else
+            {
+                <div class="Participant-List">
+                    @foreach (ParticipantLightReturnDTO p in _event.Participants)
+                    {
+                        <div class="Participant-Card">
+
+                            @if (p.Type == ParticipantType.PERSON)
+                            {
+                                <strong>@p.FirstName @p.LastName</strong>
+                                <p>Isikukood: @p.IdNumber</p>
+                            }
+                            else
+                            {
+                                <strong>@p.Name</strong>
+                                <p>Registrikood: @p.ComapnyCode</p>
+                                <p>Osalejaid: @p.ParticipantAmount</p>
+                            }
+
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Buttons -->
+            <div class="form-actions">
+                <button class="btn btn--secondary"
+                        @onclick="NavigateBack">
+                    Tagasi
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public Guid EventId { get; set; }
+
+    private EventDetailedReturnDTO? _event;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _event = await EventApi.GetEvent(EventId);
+    }
+
+    private void NavigateBack()
+    {
+        Nav.NavigateTo("/");
+    }
 }

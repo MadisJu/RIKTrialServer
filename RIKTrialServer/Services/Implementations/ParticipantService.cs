@@ -12,21 +12,22 @@ namespace RIKTrialServer.Services.Implementations
     {
         private readonly IParticipantRepository _participantRepo = participantRepo;
 
-        public async Task<bool> CreateParticipant(ParticipantCreationDTO data, CancellationToken ctoken)
+        public async Task<Guid?> CreateParticipant(ParticipantCreationDTO data, CancellationToken ctoken)
         {
             Participant p;
+            Guid id = Guid.NewGuid();
 
             switch (data.Type)
             {
                 case ParticipantType.PERSON:
 
-                    if (data.FirstName == null) return false;
-                    if (data.LastName == null) return false;
-                    if (data.IdNumber == null) return false;
+                    if (data.FirstName == null) return null;
+                    if (data.LastName == null) return null;
+                    if (data.IdNumber == null) return null;
 
                     p = new Person
                         (
-                        Guid.NewGuid(),
+                        id,
                         data.PaymentMethodId,
                         data.FirstName,
                         data.LastName,
@@ -39,12 +40,12 @@ namespace RIKTrialServer.Services.Implementations
 
                     int participantAmount = data.ParticipantAmount != null ? data.ParticipantAmount.Value : 0;
 
-                    if (data.Name == null) return false;
-                    if (data.ComapnyCode == null) return false;
+                    if (data.Name == null) return null;
+                    if (data.ComapnyCode == null) return null;
 
                     p = new Company
                         (
-                        Guid.NewGuid(),
+                        id,
                         data.PaymentMethodId,
                         data.Name,
                         data.ComapnyCode,
@@ -54,10 +55,12 @@ namespace RIKTrialServer.Services.Implementations
                     break;
 
                 default:
-                    return false;
+                    return null;
             }
 
-            return await _participantRepo.AddParticipant(p, ctoken);
+            if (!(await _participantRepo.AddParticipant(p, ctoken))) return null;
+
+            return id;
 
         }
 

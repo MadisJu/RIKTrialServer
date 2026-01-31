@@ -16,5 +16,21 @@ namespace RIKTrialServer.Transformers
                 Name = ev.Name,
             };
         }
+
+        public static EventDetailedReturnDTO MapToEventResponse(Event ev)
+        {
+            return new EventDetailedReturnDTO
+            {
+                Id = ev.Id,
+                Date = ev.Date,
+                Location = ev.Location,
+                Name = ev.Name,
+                Participants = ev.Participants
+                    .Select(static ep =>
+                        ParticipantMapper.MapToParticipantLightReturnDTO(ep.Participant))
+                    .ToList(),
+                AdditionalInfo = ev.AdditionalInfo
+            };
+        }
     }
 }

@@ -1,5 +1,183 @@
-﻿<h3>AddParticipant</h3>
+﻿@page "/events/{EventId:guid}/participants/add"
 
-@code {
+@using RIKTrialSharedModels.Domain.Creation
+@using RIKTrialSharedModels.Domain.Types
+@rendermode InteractiveServer
 
+@inject ParticipantAPIService ParticipantApi
+@inject PaymentMethodAPIService PaymentApi
+@inject EventAPIService EventApi
+@inject NavigationManager Nav
+
+<PageTitle>Lisa Osaleja</PageTitle>
+
+<div class="Banner">
+    <div class="Banner-Text Text-Header Text-Header--Center">
+        <h1>Lisa osaleja üritusele</h1>
+    </div>
+
+    <div class="Banner-Image">
+        <img src="/images/libled.jpg" />
+    </div>
+</div>
+
+<div class="Form-Body">
+    <div class="Form-Card">
+
+        <h2>Osaleja Andmed</h2>
+
+        <EditForm Model="@_model"
+                  OnValidSubmit="SubmitParticipant"
+                  OnInvalidSubmit="InvalidSubmit">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="Form-Row">
+                <label>Tüüp</label>
+
+                <InputRadioGroup @bind-Value="_model.Type"
+                                 TValue="ParticipantType">
+
+                    <label>
+                        <InputRadio TValue="ParticipantType"
+                                    Value="ParticipantType.PERSON" />
+                        Eraisik
+                    </label>
+
+                    <label>
+                        <InputRadio TValue="ParticipantType"
+                                    Value="ParticipantType.COMPANY" />
+                        Ettevõte
+                    </label>
+
+                </InputRadioGroup>
+            </div>
+
+            <!-- Person Fields -->
+            @if (_model.Type == ParticipantType.PERSON)
+            {
+                <div class="Form-Row">
+                    <label>Eesnimi</label>
+                    <InputText class="form-input" @bind-Value="_model.FirstName" />
+                </div>
+
+                <div class="Form-Row">
+                    <label>Perekonnanimi</label>
+                    <InputText class="form-input" @bind-Value="_model.LastName" />
+                </div>
+
+                <div class="Form-Row">
+                    <label>Isikukood</label>
+                    <InputText class="form-input" @bind-Value="_model.IdNumber" />
+                </div>
+            }
+
+            <!-- Company Fields -->
+            @if (_model.Type == ParticipantType.COMPANY)
+            {
+                <div class="Form-Row">
+                    <label>Nimi</label>
+                    <InputText class="form-input" @bind-Value="_model.Name" />
+                </div>
+
+                <div class="Form-Row">
+                    <label>Registrikood</label>
+                    <InputText class="form-input" @bind-Value="_model.ComapnyCode" />
+                </div>
+
+                <div class="Form-Row">
+                    <label>Osalejate arv</label>
+                    <InputNumber class="form-input"
+                                 @bind-Value="_model.ParticipantAmount" />
+                </div>
+            }
+
+            <!-- Payment Method -->
+            <div class="Form-Row">
+                <label>Makseviis</label>
+
+                <InputSelect class="form-input"
+                             @bind-Value="_model.PaymentMethodId">
+                    @foreach (PaymentMethodReturnDTO pm in _paymentMethods)
+                    {
+                        <option value="@pm.Id">@pm.PaymentMethod</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="Form-Row">
+                <label>Lisainfo</label>
+                <InputTextArea class="form-input form-textarea"
+                               @bind-Value="_model.AdditionalInfo" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-actions">
+                <button type="button"
+                        class="btn btn--secondary"
+                        @onclick="NavigateBack">
+                    Tagasi
+                </button>
+
+                <button type="submit"
+                        class="btn btn--primary">
+                    Lisa Osaleja
+                </button>
+            </div>
+
+        </EditForm>
+
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public Guid EventId { get; set; }
+
+    private ParticipantCreationDTO _model = new();
+
+    private List<PaymentMethodReturnDTO> _paymentMethods = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model.Type = ParticipantType.PERSON;
+
+        _paymentMethods = await PaymentApi.GetPaymentMethods();
+
+        if (_paymentMethods.Count == 0)
+        {
+            Console.WriteLine("NO PAYMENT METHODS FOUND");
+            return;
+        }
+
+        _model.PaymentMethodId = _paymentMethods[0].Id;
+    }
+
+    private async Task SubmitParticipant()
+    {
+
+        Guid participantId = await ParticipantApi.CreateParticipant(_model);
+
+        RegistrationDTO reg = new RegistrationDTO { EventId = EventId, ParticipantId = participantId };
+
+        bool ok =
+            await EventApi.AddParticipant(reg);
+
+        if (ok)
+        {
+            Nav.NavigateTo($"/events/{EventId}");
+        }
+    }
+
+    private void InvalidSubmit()
+    {
+        Console.WriteLine("FORM INVALID — SUBMIT BLOCKED");
+    }
+
+    private void NavigateBack()
+    {
+        Nav.NavigateTo($"/events/{EventId}");
+    }
 }

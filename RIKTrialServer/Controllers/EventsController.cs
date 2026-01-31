@@ -19,6 +19,20 @@ namespace RIKTrialServer.Controllers
             return Ok(await _eventService.GetEvents(filters, ctoken));
         }
 
+        [HttpGet]
+        [Route("event")]
+        public async Task<ActionResult<EventDetailedReturnDTO>> GetEvent([FromQuery] Guid id, CancellationToken ctoken)
+        {
+            try
+            {
+                return Ok(await _eventService.GetEvent(id, ctoken));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("event")]
         public async Task<ActionResult<bool>> PostEvent([FromBody] EventCreationDTO data, CancellationToken ctoken)

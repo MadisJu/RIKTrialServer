@@ -40,9 +40,11 @@ namespace RIKTrialServer.Services.Implementations
             return await _eventRepo.RemoveEvent(ev, ctoken);
         }
 
-        public async Task<Event?> GetEvent(Guid eventId, CancellationToken ctoken)
+        public async Task<EventDetailedReturnDTO> GetEvent(Guid eventId, CancellationToken ctoken)
         {
-            return await _eventRepo.GetEventByID(eventId, ctoken);
+            Event? ev = await _eventRepo.GetEventByID(eventId, ctoken) ?? throw new Exception("No event");
+
+            return EventMapper.MapToEventResponse(ev);
         }
 
         public async Task<List<EventReturnDTO>> GetEvents(EventFilters filters, CancellationToken ctoken)

@@ -24,7 +24,11 @@ namespace RIKTrialServer.Repositories.Implementations
         public async Task<Event?> GetEventByID(Guid id, CancellationToken ctoken)
         {
 
-            return await _dbc.Events.FirstOrDefaultAsync(e => e.Id == id, ctoken);
+            return await _dbc.Events
+                .Include(e => e.Participants)
+                    .ThenInclude(ep => ep.Participant)
+                        .ThenInclude(p => p.PaymentMethod)
+                .FirstOrDefaultAsync(e => e.Id == id, ctoken);
         }
 
         public async Task<List<Event>> GetEvents(EventFilters filters, CancellationToken ctoken)

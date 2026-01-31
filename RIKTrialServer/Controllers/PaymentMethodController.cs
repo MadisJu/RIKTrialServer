@@ -9,20 +9,20 @@ namespace RIKTrialServer.Controllers
     [Route("api/[controller]")]
     public class PaymentMethodController(IPaymentMethodService paymetServ) : ControllerBase
     {
-        private readonly IPaymentMethodService _paymetServ = paymetServ;
+        private readonly IPaymentMethodService _paymentServ = paymetServ;
 
         [HttpGet]
         [Route("paymentmethods")]
         public async Task<ActionResult<List<PaymentMethodReturnDTO>>> GetPaymentMethods(CancellationToken ctoken)
         {
-            return Ok( await _paymetServ.GetPaymentMethods(ctoken));
+            return Ok( await _paymentServ.GetPaymentMethods(ctoken));
         }
 
         [HttpPost]
         [Route("paymentmethod")]
         public async Task<ActionResult<bool>> PostPaymentMethod(PaymentMethodCreationDTO data, CancellationToken ctoken)
         {
-            return Ok(await _paymetServ.CreatePaymentMethod(data, ctoken));
+            return Ok(await _paymentServ.CreatePaymentMethod(data, ctoken));
         }
 
         [HttpPut]
@@ -30,7 +30,7 @@ namespace RIKTrialServer.Controllers
 
         public async Task<ActionResult<bool>> TogglePaymentMethod([FromQuery] int paymentId, CancellationToken ctoken)
         {
-            return Ok(await _paymetServ.TogglePaymentMethod(paymentId, ctoken));
+            return Ok(await _paymentServ.TogglePaymentMethod(paymentId, ctoken));
         }
     }
 }
