@@ -13,6 +13,11 @@ Rakendus võimaldab hallata üritusi, registreerida osalejaid (isikud ja ettevõ
 
 ---
 
+## DBDiagram
+[Andmebaasi Diagram](https://dbdiagram.io/d/RIKTrial-697706ffbd82f5fce2943fc6)
+
+
+---
 ## Projekti käivitamine
 
 ### 1. Klooni repositoorium
