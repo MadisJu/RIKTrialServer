@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RIKTrialServer.Services.Interfaces;
 using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Filters;
 using RIKTrialSharedModels.Domain.Returns;
 using RIKTrialSharedModels.Domain.Updates;
 
@@ -70,16 +71,16 @@ namespace RIKTrialServer.Controllers
 
         [HttpGet]
         [Route("participants")]
-        public async Task<ActionResult<List<ParticipantLightReturnDTO>>> GetEventParticipants([FromQuery] Guid eventId, CancellationToken ctoken)
+        public async Task<ActionResult<List<ParticipantLightReturnDTO>>> GetEventParticipants([FromQuery] Guid eventId, [FromQuery] ParticipantFilters filters, CancellationToken ctoken)
         {
-            return Ok(await _participantService.GetEventParticipants(eventId,ctoken));
+            return Ok(await _participantService.GetEventParticipants(filters, eventId, ctoken));
         }
 
         [HttpGet]
         [Route("allparticipants")]
-        public async Task<ActionResult<List<ParticipantReturnDTO>>> GetAllParticipants(CancellationToken ctoken)
+        public async Task<ActionResult<List<ParticipantReturnDTO>>> GetAllParticipants([FromQuery] ParticipantFilters filters, CancellationToken ctoken)
         {
-            return Ok(await _participantService.GetParticipants(ctoken));
+            return Ok(await _participantService.GetParticipants(filters, ctoken));
         }
 
     }

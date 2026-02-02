@@ -43,6 +43,12 @@
                 </div>
             }
         </div>
+        <PagingBar Page="_upcomingPage"
+                   PageSize="PageSize"
+                   CurrentCount="_upcomingEvents?.Count ?? 0"
+                   OnNext="NextUpcoming"
+                   OnPrev="PrevUpcoming" />
+
     </div>
     @*Past events*@
     <div class="Grid-Box">
@@ -71,6 +77,12 @@
                 </div>
             }
         </div>
+        <PagingBar Page="_pastPage"
+                   PageSize="PageSize"
+                   CurrentCount="_pastEvents?.Count ?? 0"
+                   OnNext="NextPast"
+                   OnPrev="PrevPast" />
+
     </div>
 </div>
 
@@ -83,9 +95,14 @@
     private List<EventReturnDTO>? _upcomingEvents;
     private List<EventReturnDTO>? _pastEvents;
 
+    private int _upcomingPage = 1;
+    private int _pastPage = 1;
+
+    private const int PageSize = 4;
+
     private void RemoveEvent(Guid eventId)
     {
-        
+
     }
 
     private void NavigateToAddParticipant(Guid eventId)
@@ -96,23 +113,67 @@
 
     protected override async Task OnInitializedAsync()
     {
-        EventFilters pastFilters = new EventFilters
-        {
-            Page = 1,
-            PageSize = 10,
-            StartDate = null,
-            EndDate = DateTime.UtcNow
-        };
 
+        await LoadUpcoming();
+        await LoadPast();
+        
+    }
+
+    private async Task LoadUpcoming()
+    {
         EventFilters upcomingFilters = new EventFilters
         {
-            Page = 1,
-            PageSize = 10,
+            Page = _upcomingPage,
+            PageSize = PageSize,
             StartDate = DateTime.UtcNow,
             EndDate = null
         };
 
-        _pastEvents = await EventApi.GetEvents(pastFilters);
+
+
+
         _upcomingEvents = await EventApi.GetEvents(upcomingFilters);
     }
+
+    private async Task LoadPast()
+    {
+        EventFilters pastFilters = new EventFilters
+        {
+            Page = _pastPage,
+            PageSize = PageSize,
+            StartDate = null,
+            EndDate = DateTime.UtcNow
+        };
+
+        _pastEvents = await EventApi.GetEvents(pastFilters);
+    }
+
+    private async Task NextUpcoming()
+    {
+        _upcomingPage++;
+        await LoadUpcoming();
+    }
+
+    private async Task PrevUpcoming()
+    {
+        if (_upcomingPage > 1)
+            _upcomingPage--;
+
+        await LoadUpcoming();
+    }
+
+    private async Task NextPast()
+    {
+        _pastPage++;
+        await LoadPast();
+    }
+
+    private async Task PrevPast()
+    {
+        if (_pastPage > 1)
+            _pastPage--;
+
+        await LoadPast();
+    }
+
 }

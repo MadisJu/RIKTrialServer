@@ -87,5 +87,20 @@ namespace RIKTrialWebInterface.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> RemoveParticipant
+        (
+            RegistrationDTO reg,
+            CancellationToken ctoken = default
+        )
+        {
+            HttpResponseMessage response =
+                await _httpClient.PostAsync(
+                    $"api/Events/unregister?ParticipantId={reg.ParticipantId}&EventId={reg.EventId}",
+                    content: null,
+                    ctoken);
+
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

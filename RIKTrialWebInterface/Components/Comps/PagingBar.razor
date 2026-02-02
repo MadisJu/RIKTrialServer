@@ -1,0 +1,46 @@
+﻿<div class="Paging-Bar">
+
+    <button class="Paging-Btn"
+            disabled="@(Page <= 1)"
+            @onclick="PrevClicked">
+        ◀ Prev
+    </button>
+
+    <span>Page @Page</span>
+
+    <button class="Paging-Btn"
+            disabled="@(CurrentCount < PageSize)"
+            @onclick="NextClicked">
+        Next ▶
+    </button>
+
+</div>
+
+@code 
+{
+    [Parameter]
+    public int Page { get; set; } = 1;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public int CurrentCount { get; set; }
+
+    [Parameter]
+    public EventCallback OnNext { get; set; }
+
+    [Parameter]
+    public EventCallback OnPrev { get; set; }
+
+    private async Task NextClicked()
+    {
+        await OnNext.InvokeAsync();
+    }
+
+    private async Task PrevClicked()
+    {
+        await OnPrev.InvokeAsync();
+    }
+
+}

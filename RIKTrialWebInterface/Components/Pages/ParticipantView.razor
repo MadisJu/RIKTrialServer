@@ -2,98 +2,101 @@
 @using RIKTrialSharedModels.Domain.Updates
 @using RIKTrialSharedModels.Domain.Types;
 @using RIKTrialSharedModels.Transformers
+@using RIKTrialWebInterface.Components.Comps
 
 @inject ParticipantAPIService ParticipantApi
 @inject PaymentMethodAPIService PaymentApi
 
 <PageTitle>Osaleja ülevaade</PageTitle>
 
-<div>
+<Banner BannerTitle="Osaleja Andmete Muutmine"/>
+
+<div class="Form-Body">
     @if (_participant == null || _patchData == null)
     {
         <p>Loading...</p>
     }
     else if(_participant.Type == ParticipantType.PERSON)
     {
-        <EditForm Model="_patchData" OnValidSubmit="Save">
-            <DataAnnotationsValidator />
+        <div class="Form-Card">
+            <EditForm Model="_patchData" OnValidSubmit="Save">
+                <DataAnnotationsValidator />
 
-            <label>First Name</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.FirstName" />
+                <label>First Name</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.FirstName" />
 
-            <label>Last Name</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.LastName" />
+                <label>Last Name</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.LastName" />
 
-            <label>Additional Info</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.AdditionalInfo" />
-    
-            <InputSelect class="form-control"
-                         @bind-Value="_patchData.PaymentMethodId">
+                <label>Additional Info</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.AdditionalInfo" />
 
-                <option value="">-- Select payment method --</option>
+                <InputSelect class="Form-Row"
+                             @bind-Value="_patchData.PaymentMethodId">
 
-                @foreach (PaymentMethodReturnDTO method in _methods)
-                {
-                    <option value="@method.Id">
-                        @method.PaymentMethod
-                    </option>
-                }
-            </InputSelect>
+                    <option value="">-- Select payment method --</option>
 
-            <button class="btn btn-primary mt-3">
-                Save Changes
-            </button>
-        </EditForm>
+                    @foreach (PaymentMethodReturnDTO method in _methods)
+                    {
+                        <option value="@method.Id">
+                            @method.PaymentMethod
+                        </option>
+                    }
+                </InputSelect>
+
+                <button class="btn btn-primary mt-3">
+                    Save Changes
+                </button>
+            </EditForm>
+        </div>
+        
 
         <p>Updated : @_participant.Type</p>
     }
     else if(_participant.Type == ParticipantType.COMPANY)
     {
-        <EditForm Model="_patchData" OnValidSubmit="Save">
-            <DataAnnotationsValidator />
+        <div class="Form-Card">
+            <EditForm Model="_patchData" OnValidSubmit="Save">
+                <DataAnnotationsValidator />
 
-            <label>Name</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.Name" />
+                <label>Name</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.Name" />
 
-            <label>Company Code</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.CompanyCode" />
+                <label>Company Code</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.CompanyCode" />
 
-            <label>Participant Amount</label>
-            <InputNumber class="form-control" TValue="int?"
-                 @bind-Value="_patchData.ParticipantAmount" />
+                <label>Participant Amount</label>
+                <InputNumber class="Form-Row" TValue="int?"
+                     @bind-Value="_patchData.ParticipantAmount" />
 
-            <label>Additional Info</label>
-            <InputText class="form-control"
-                       @bind-Value="_patchData.AdditionalInfo" />
+                <label>Additional Info</label>
+                <InputText class="Form-Row"
+                           @bind-Value="_patchData.AdditionalInfo" />
 
-            <InputSelect class="form-control"
-                         @bind-Value="_patchData.PaymentMethodId">
+                <InputSelect class="Form-Row"
+                             @bind-Value="_patchData.PaymentMethodId">
 
-                <option value="">-- Select payment method --</option>
+                    <option value="">-- Select payment method --</option>
 
-                @foreach (PaymentMethodReturnDTO method in _methods)
-                {
-                    <option value="@method.Id">
-                        @method.PaymentMethod
-                    </option>
-                }
-            </InputSelect>
+                    @foreach (PaymentMethodReturnDTO method in _methods)
+                    {
+                        <option value="@method.Id">
+                            @method.PaymentMethod
+                        </option>
+                    }
+                </InputSelect>
 
-            <button class="btn btn-primary mt-3">
-                Save Changes
-            </button>
-        </EditForm>
-
-        <p>Updated : @_participant.Type</p>
+                <button class="btn btn-primary mt-3">
+                    Save Changes
+                </button>
+            </EditForm>
+        </div>
     }
-
-    <p>Updated : @updated.ToString()</p>
-    
 </div>
 
 @code 
@@ -113,14 +116,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _participant = await ParticipantApi.GetParticipant(ParticipantId);
-
-        _methods = await PaymentApi.GetPaymentMethods();
-
-        if (_participant != null)
-        {
-            _patchData = ParticipantDTOMapper.MapParticipantDataToCreationDTO(_participant);
-        }
+        await Init();
     }
 
     private async void Save()
@@ -154,6 +150,25 @@
 
             updated = await ParticipantApi.UpdateParticipant(ParticipantId, _patchData);
         }
+
+        if(updated)
+        {
+            await Init();
+        }
+
+    }
+
+    private async Task Init()
+    {
+        _participant = await ParticipantApi.GetParticipant(ParticipantId);
+
+        _methods = await PaymentApi.GetPaymentMethods();
+
+        if (_participant != null)
+        {
+            _patchData = ParticipantDTOMapper.MapParticipantDataToCreationDTO(_participant);
+        }
         
+        StateHasChanged();
     }
 }

@@ -16,3 +16,70 @@
 {
     background-color:royalblue;
 }
+
+.Management-Content
+{
+    
+}
+
+.Participant-List
+{
+
+}
+
+.PaymentMethod-List
+{
+
+}
+
+
+/*For the header for participant list*/
+.Participant-Card {
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    align-items: center;
+    padding: 4px 4px 4px 4px;
+    margin-top: 2px;
+    background-color: royalblue;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    box-shadow: -5px 5px 12px rgba(0, 0, 0, 0.05);
+    height: 2.5rem;
+}
+
+.Participant-Card--Main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+}
+
+.Participant-Card--Title {
+    font-weight: bold;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    padding-left: 6px;
+}
+
+.Participant-Card--Sub {
+    white-space: wrap;
+    padding-left: 6px;
+
+}
+
+.Participant-Card--Btn {
+    cursor: pointer;
+    background: transparent;
+    width: 30px;
+    height: 30px;
+    justify-self: end;
+    border: hidden;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+    .Participant-Card--Btn img {
+        width: 16px;
+        height: 16px;
+    }
+
+        .Participant-Card--Btn img:hover {
+            width: 20px;
+            height: 20px;
+        }

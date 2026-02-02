@@ -121,15 +121,21 @@
 
     private async Task SubmitEvent()
     {
-        _model.Date = new DateTime
-            (
-                _model.Date.Year,
-                _model.Date.Month,
-                _model.Date.Day,
-                _hour,
-                _minute,
-                0
+
+        DateTime localDateTime =
+            DateTime.SpecifyKind(
+                new DateTime(
+                    _model.Date.Year,
+                    _model.Date.Month,
+                    _model.Date.Day,
+                    _hour,
+                    _minute,
+                    0
+                ),
+                DateTimeKind.Local
             );
+
+        _model.Date = localDateTime.ToUniversalTime();
 
 
         bool ok = await EventApi.CreateEvent(_model);

@@ -1,7 +1,7 @@
 ﻿.Participant-Card 
 {
     display: grid;
-    grid-template-columns: 8fr 1fr 1fr;
+    grid-template-columns: 9fr 1fr 1fr;
     align-items: center;
     padding: 4px 4px 4px 4px;
     margin-top: 2px;
@@ -21,7 +21,7 @@
 
 .Participant-Card--Main {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
 }
 
 .Participant-Card--Title {

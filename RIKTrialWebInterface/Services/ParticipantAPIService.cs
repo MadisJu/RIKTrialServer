@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Filters;
 using RIKTrialSharedModels.Domain.Returns;
 using RIKTrialSharedModels.Domain.Updates;
 
@@ -45,15 +46,31 @@ namespace RIKTrialWebInterface.Services
 
         public async Task<List<ParticipantReturnDTO>> GetAllParticipants
             (
+                ParticipantFilters filters,
                 CancellationToken ctoken = default
             )
         {
             return await _http.GetFromJsonAsync<List<ParticipantReturnDTO>>
                 (
-                    $"api/Participant/allparticipants",
+                    $"api/Participant/allparticipants?Page={filters.Page}&PageSize={filters.PageSize}",
                     ctoken
                 ) ?? throw new Exception("Osavõtjate fetchimine failis.");
         }
+
+        public async Task<List<ParticipantLightReturnDTO>> GetEventParticipants
+            (
+                Guid eventId,
+                ParticipantFilters filters,
+                CancellationToken ctoken = default
+            )
+        {
+            return await _http.GetFromJsonAsync<List<ParticipantLightReturnDTO>>
+                (
+                    $"api/Participant/participants?eventId={eventId}&Page={filters.Page}&PageSize={filters.PageSize}",
+                    ctoken
+                ) ?? throw new Exception("Osavõtjate fetchimine failis.");
+        }
+
 
         public async Task<bool> UpdateParticipant
             (
@@ -69,9 +86,24 @@ namespace RIKTrialWebInterface.Services
                     ctoken
                 );
 
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> DeleteParticipant
+            (
+            Guid id,
+            CancellationToken ctoken = default
+            )
+        {
+            HttpResponseMessage response = await _http.DeleteAsync
+                (
+                $"api/Participant/participant?id={id}",
+                ctoken
+                );
+
             response.EnsureSuccessStatusCode();
 
-            return true; 
+            return true;
         }
     }
 }

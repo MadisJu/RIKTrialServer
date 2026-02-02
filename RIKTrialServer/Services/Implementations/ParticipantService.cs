@@ -3,9 +3,11 @@ using RIKTrialServer.Repositories.Interfaces;
 using RIKTrialServer.Services.Interfaces;
 using RIKTrialServer.Transformers;
 using RIKTrialSharedModels.Domain.Creation;
+using RIKTrialSharedModels.Domain.Filters;
 using RIKTrialSharedModels.Domain.Returns;
 using RIKTrialSharedModels.Domain.Types;
 using RIKTrialSharedModels.Domain.Updates;
+using System;
 
 namespace RIKTrialServer.Services.Implementations
 {
@@ -74,9 +76,9 @@ namespace RIKTrialServer.Services.Implementations
             return await _participantRepo.RemoveAsync(p, ctoken);
         }
 
-        public async Task<List<ParticipantLightReturnDTO>> GetEventParticipants(Guid eventId, CancellationToken ctoken)
+        public async Task<List<ParticipantLightReturnDTO>> GetEventParticipants(ParticipantFilters filters, Guid eventId, CancellationToken ctoken)
         {
-            List<Participant> participants = await _participantRepo.GetEventParticipants(eventId, ctoken);
+            List<Participant> participants = await _participantRepo.GetEventParticipants(filters, eventId, ctoken);
 
             return participants.Select(p => ParticipantMapper.MapToParticipantLightReturnDTO(p)).ToList();
         }
@@ -88,9 +90,9 @@ namespace RIKTrialServer.Services.Implementations
             return ParticipantMapper.MapToParticipantReturnDTO(p);
         }
 
-        public async Task<List<ParticipantReturnDTO>> GetParticipants(CancellationToken ctoken)
+        public async Task<List<ParticipantReturnDTO>> GetParticipants(ParticipantFilters filters, CancellationToken ctoken)
         {
-            List<Participant> participants = await _participantRepo.GetParticipants(ctoken);
+            List<Participant> participants = await _participantRepo.GetParticipants(filters, ctoken);
             return participants.Select(p => ParticipantMapper.MapToParticipantReturnDTO(p)).ToList();
         }
 
@@ -117,6 +119,7 @@ namespace RIKTrialServer.Services.Implementations
                     if (data.CompanyCode is  string comapnyCode) comp.CompanyCode = comapnyCode;
                     if (data.ParticipantAmount is int participantAmount) comp.ParticipantAmount = participantAmount;
                     if (data.AdditionalInfo is string addInfo) comp.AdditionalInfo = addInfo;
+                    if (data.PaymentMethodId is int paymentID) comp.PaymentMethodId = paymentID;
                     break;
 
                 default:

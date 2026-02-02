@@ -2,6 +2,7 @@
 using RIKTrialServer.Domains.Models;
 using RIKTrialServer.Infra.Persistance;
 using RIKTrialServer.Repositories.Interfaces;
+using RIKTrialSharedModels.Domain.Filters;
 
 namespace RIKTrialServer.Repositories.Implementations
 {
@@ -15,11 +16,16 @@ namespace RIKTrialServer.Repositories.Implementations
             return 0 < await _dbc.SaveChangesAsync(ctoken);
         }
 
-        public async Task<List<Participant>> GetEventParticipants(Guid eventId, CancellationToken ctoken)
+        public async Task<List<Participant>> GetEventParticipants(ParticipantFilters filters, Guid eventId, CancellationToken ctoken)
         {
+            int skip = (filters.Page - 1) * filters.PageSize;
+
             return await _dbc.EventParticipants
                 .Where(ep => ep.EventId == eventId)
                 .Select(ep => ep.Participant)
+                .OrderBy(e => e.Id)
+                .Skip(skip)
+                .Take(filters.PageSize)
                 .ToListAsync(ctoken);
         }
 
@@ -30,10 +36,15 @@ namespace RIKTrialServer.Repositories.Implementations
                 .FirstOrDefaultAsync(p => p.Id == id, ctoken);
         }
 
-        public Task<List<Participant>> GetParticipants(CancellationToken ctoken)
+        public async Task<List<Participant>> GetParticipants(ParticipantFilters filters, CancellationToken ctoken)
         {
-            return _dbc.Participants
-                .Include(p => p.PaymentMethod)
+
+            int skip = (filters.Page - 1) * filters.PageSize;
+
+            return await BaseQuery()
+                .OrderBy(e => e.Id)
+                .Skip(skip)
+                .Take(filters.PageSize)
                 .ToListAsync(ctoken);
         }
 
@@ -46,6 +57,16 @@ namespace RIKTrialServer.Repositories.Implementations
         {
             _dbc.Participants.Remove(p);
             return 0 < await _dbc.SaveChangesAsync(ctoken);
+        }
+
+        // -- Helpers --
+
+        private IQueryable<Participant> BaseQuery()
+        {
+            IQueryable<Participant> query = _dbc.Participants
+                .Include(p => p.PaymentMethod);
+
+            return query;
         }
     }
 }

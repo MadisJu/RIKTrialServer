@@ -1,10 +1,13 @@
 ﻿@page "/events/{EventId:guid}"
 
+@using RIKTrialSharedModels.Domain.Creation
+@using RIKTrialSharedModels.Domain.Filters
 @using RIKTrialSharedModels.Domain.Returns
 @using RIKTrialSharedModels.Domain.Types
 @using RIKTrialWebInterface.Components.Comps
 
 @inject EventAPIService EventApi
+@inject ParticipantAPIService ParticipantAPI
 @inject NavigationManager Nav
 
 <PageTitle>Ürituse Vaade</PageTitle>
@@ -17,57 +20,94 @@ else
 {
     <Banner BannerTitle="Üritus"/>
 
-    <div class="Form-Body">
+    <div class="Event-View--Body">
+        <div class="Form-Body">
 
-        <div class="Form-Card">
+            <div class="Form-Card">
 
-            <h2>Ürituse Andmed</h2>
+                <h2>Ürituse Andmed</h2>
 
-            <div class="Form-Row">
-                <label>Kuupäev</label>
-                <span>@_event.Date.ToString("dd.MM.yyyy HH:mm")</span>
-            </div>
-
-            <div class="Form-Row">
-                <label>Asukoht</label>
-                <span>@_event.Location</span>
-            </div>
-
-            @if (!string.IsNullOrWhiteSpace(_event.AdditionalInfo))
-            {
                 <div class="Form-Row">
-                    <label>Lisainfo</label>
-                    <span>@_event.AdditionalInfo</span>
+                    <label>Nimi</label>
+                    <span>@_event.Name</span>
                 </div>
-            }
 
-            <h2 class="Section-Title">Osalejad</h2>
-
-            @if (_event.Participants.Count == 0)
-            {
-                <p>Osalejaid pole veel lisatud.</p>
-            }
-            else
-            {
-                <div class="Participant-List">
-                    @foreach (ParticipantLightReturnDTO p in _event.Participants)
-                    {
-                        <ParticipantCardLight
-                            Participant="p"
-                            />
-                    }
+                <div class="Form-Row">
+                    <label>Kuupäev</label>
+                    <span>@_event.Date.ToString("dd.MM.yyyy HH:mm")</span>
                 </div>
-            }
 
-            <div class="form-actions">
-                <button class="btn btn--secondary"
-                        @onclick="NavigateBack">
-                    Tagasi
-                </button>
+                <div class="Form-Row">
+                    <label>Asukoht</label>
+                    <span>@_event.Location</span>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_event.AdditionalInfo))
+                {
+                    <div class="Form-Row">
+                        <label>Lisainfo</label>
+                        <span>@_event.AdditionalInfo</span>
+                    </div>
+                }
+
+                <h2 class="Section-Title">Osalejad</h2>
+
+                @if (_event.Participants.Count == 0)
+                {
+                    <p>Leht on tühi</p>
+                }
+                else
+                {
+                    <div class="Participant-List">
+                        @foreach (ParticipantLightReturnDTO p in _event.Participants)
+                        {
+                            <ParticipantCardLight Participant="p"
+                                                  RemoveParticipantEvent="RemoveParticipant" />
+                        }
+                    </div>
+                }
+
+                <div class="form-actions">
+                    <button class="btn btn--secondary"
+                            @onclick="NavigateBack">
+                        Tagasi
+                    </button>
+                </div>
+
+                <PagingBar
+                    Page="_participantViewPage"
+                    PageSize="ParticipantViewPage"
+                    CurrentCount="_event.Participants.Count"
+                    OnNext="NextView"
+                    OnPrev="PrevView"
+                    />
+
             </div>
+        </div>
+        <div>
+            <div>
+                Lisa olemasolevaid
+            </div>
+            
+            <div class="Participant-List">
+                @foreach (ParticipantReturnDTO p in _participants)
+                {
+                    <ParticipantCard Participant="p"
+                                          ActionEnabled="@(!ExsistsInList(p.Id))"
+                                          ActionEvent="AddParticipant"
+                                          />
+                }
+            </div>
+
+            <PagingBar Page="_participantAddPage"
+                       PageSize="ParticipantAddPage"
+                       CurrentCount="_participants.Count"
+                       OnNext="NextAdd"
+                       OnPrev="PrevAdd" />
 
         </div>
     </div>
+    
 }
 
 @code
@@ -77,13 +117,97 @@ else
 
     private EventDetailedReturnDTO? _event;
 
+    private List<ParticipantReturnDTO> _participants = new();
+
+    private int _participantAddPage = 1;
+    private const int ParticipantAddPage = 8;
+
+    private int _participantViewPage = 1;
+    private const int ParticipantViewPage = 5;
+
     protected override async Task OnInitializedAsync()
     {
-        _event = await EventApi.GetEvent(EventId);
+        _event = await EventApi.GetEvent(EventId); // Actually this loads in the whole participants, at first i intended it to be like this, but ill leave it in for now. Otherwise this would be changed.
+        await LoadEventParticipants();
+
+        await LoadParticipants();
     }
 
     private void NavigateBack()
     {
         Nav.NavigateTo("/");
     }
+
+    private async Task RemoveParticipant(Guid id)
+    {
+        bool success = await EventApi.RemoveParticipant(new RegistrationDTO { ParticipantId = id, EventId = EventId });
+
+        if (success && _event != null)
+            await LoadEventParticipants();
+    }
+
+    private async Task AddParticipant(Guid id)
+    {
+        bool success = await EventApi.AddParticipant(new RegistrationDTO { ParticipantId = id, EventId = EventId });
+
+        if (success && _event != null)
+            await LoadEventParticipants();
+    }
+
+    private async Task LoadEventParticipants()
+    {
+        ParticipantFilters filters = new()
+            {
+                Page = _participantViewPage,
+                PageSize = ParticipantViewPage
+            };
+
+        if(_event != null)
+            _event.Participants = await ParticipantAPI.GetEventParticipants(EventId, filters);
+    }
+
+    private async Task LoadParticipants()
+    {
+        ParticipantFilters filters = new()
+        {
+            Page = _participantAddPage,
+            PageSize = ParticipantAddPage
+        };
+
+        _participants = await ParticipantAPI.GetAllParticipants(filters);
+    }
+
+    private bool ExsistsInList(Guid id)
+    {
+        return _event?.Participants.Any(p => p.Id == id) ?? false;
+    }
+
+    private async Task NextView()
+    {
+        _participantViewPage++;
+        await LoadEventParticipants();
+    }
+
+    private async Task PrevView()
+    {
+        if (_participantViewPage > 1)
+            _participantViewPage--;
+
+        await LoadEventParticipants();
+    }
+
+    private async Task NextAdd()
+    {
+        _participantAddPage++;
+        await LoadParticipants();
+    }
+
+    private async Task PrevAdd()
+    {
+        if (_participantAddPage > 1)
+            _participantAddPage--;
+
+        await LoadParticipants();
+    }
+
 }

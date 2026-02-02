@@ -15,13 +15,29 @@
             </span>
 
             <span class="Participant-Card--Sub">
+            </span>
+
+            <span class="Participant-Card--Sub">
                 @Participant.PaymentMethod.PaymentMethod
             </span>
 
             <span class="Participant-Card--Sub">
                 @Participant.AdditionalInfo
             </span>
+
         </div>
+
+        @if (ActionEnabled)
+        {
+            <button class="Participant-Card--Btn"
+                    type="button"
+                    title="Kustuta Osaleja"
+                    @onclick:stopPropagation="true"
+                    @onclick:preventDefault="true"
+                    @onclick="FireAction">
+                <img src="images/remove.svg" alt="Delete Participant" />
+            </button>
+        }
     }
     else
     {
@@ -32,6 +48,9 @@
 
             <span class="Participant-Card--Sub">
                 @Participant.CompanyCode
+            </span>
+
+            <span class="Participant-Card--Sub">
                 @if (Participant.ParticipantAmount is not null)
                 {
                     <span class="extra">
@@ -48,7 +67,17 @@
                 @Participant.AdditionalInfo
             </span>
         </div>
-        
+        @if (ActionEnabled)
+        {
+            <button class="Participant-Card--Btn"
+                    type="button"
+                    title="Kustuta Osaleja"
+                    @onclick:stopPropagation="true"
+                    @onclick:preventDefault="true"
+                    @onclick="FireAction">
+                <img src="images/remove.svg" alt="Delete Participant" />
+            </button>
+        }
     }
 
 </div>
@@ -58,8 +87,21 @@
     [Parameter]
     public ParticipantReturnDTO Participant { get; set; } = null!;
 
+    [Parameter]
+    public bool ActionEnabled { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<Guid> ActionEvent { get; set; }
+
     [Inject]
     private NavigationManager Nav { get; set; } = null!;
+
+    
+
+    private async Task FireAction()
+    {
+        await ActionEvent.InvokeAsync(Participant.Id);
+    }
 
     private void GoToEdit()
     {
