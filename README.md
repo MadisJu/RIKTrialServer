@@ -16,6 +16,8 @@ Rakendus võimaldab hallata üritusi, registreerida osalejaid (isikud ja ettevõ
 ## DBDiagram
 [Andmebaasi Diagram](https://dbdiagram.io/d/RIKTrial-697706ffbd82f5fce2943fc6)
 
+## Lucidchart
+[Flow chart (Valmimisel)](https://lucid.app/lucidspark/9ee43aa2-cd4e-47cc-a001-ee2fca84f146/edit?viewport_loc=4803%2C-6280%2C21323%2C11333%2C0_0&invitationId=inv_917c5a17-0bcc-4867-b34e-5afad5fe1615)
 
 ---
 ## Projekti käivitamine
