@@ -24,5 +24,9 @@ Rakendus võimaldab hallata üritusi, registreerida osalejaid (isikud ja ettevõ
 
 ### 2. Ava Visual studios .sln fail
 
-### 3. Vali "Full Deploy / Full Start" profiil ning käivita Veebileht avaneb automaatselt. `https://localhost:5001/swagger/index.html` On Api swagger. || Dockeri olemasolul jooksutada `docker compose up -d --build` root kaustas ja veebilehe ligipääs on `localhost:7000`.
+### 3. Käivitus
+"Full Deploy / Full Start" profiil ning käivita.
+Veebileht avaneb automaatselt. `https://localhost:5001/swagger/index.html` On Api swagger. 
+---
+Dockeri olemasolul jooksutada `docker compose up -d --build` root kaustas ja veebilehe ligipääs on `localhost:7000`.
 !!NB On võimalik et : Full Deploy ja Docker compose ei saa samal ajal üleval hoida, portide konfliktid!!
